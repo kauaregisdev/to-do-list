@@ -1,2 +1,8 @@
 # ignora a pasta de ambiente virtual
 /venv
+
+# ignora o pycache
+/scripts/__pycache__
+
+# ignora o tasks.json que armazena os dados da API
+/scripts/tasks.json
