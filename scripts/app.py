@@ -11,7 +11,7 @@ def create_task(): # cria tarefa com nome, descrição e ID
     global next_id
     data = request.json
     if not data.get('title') or not data.get('description'): # checando se há nome e descrição
-        return jsonify({'message': 'Name and description are required'}), 401
+        return jsonify({'message': 'Title and description are required'}), 401
     data['id'] = next_id
     data['done'] = bool(data.get('done'))
     tasks.append(data)
@@ -27,7 +27,7 @@ def read_tasks(): # retorna uma lista com as tarefas cadastrados
 def update_task(task_id): # atualiza dados de uma tarefa específica
     data = request.json
     if not data.get('title') or not data.get('description'): # checando se há nome e descrição
-        return jsonify({'message': 'Name and description are required'}), 401
+        return jsonify({'message': 'Title and description are required'}), 401
     for task in tasks:
         if task['id'] == task_id:
             task['title'] = data['title']

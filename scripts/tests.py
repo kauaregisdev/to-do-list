@@ -23,4 +23,7 @@ response = requests.put(user_url, json=new_json)
 print('PUT /tasks:', response.json())
 
 response = requests.delete(user_url)
-print('DELETE /tasks:', response.json())
+if response.content:
+    print('DELETE /tasks:', response.json())
+else:
+    print('DELETE /tasks:', response.status_code)
