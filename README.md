@@ -85,20 +85,60 @@ OBSERVAÇÃO: caso haja uma pasta venv/ nos arquivos do projeto, delete-a antes 
 3. instale as dependências pelo terminal, com o comando:
 pip install -r requirements.txt
 
-4. execute o app Flask, com o comando:
+4. faça o deploy local do app Flask, com o comando:
 cd scripts
 waitress-serve --port=5000 app:app
 
-5. rode os scripts de teste em outro terminal, com o comando:
-cd scripts
-python test_request.py (teste usando a biblioteca requests)
-pytest test_auto.py (teste automatizado usando pytest)
+Se você fez tudo certo, a API já está funcionando a partir daqui! A resposta do terminal deve ser a seguinte:
 
-OU, SE POSSÍVEL:
-faça as requisições HTTP direto do Postman ou do Postcode, com a URL:
-http://127.0.0.1:5000/tasks
-para editar uma tarefa isolada, adicionar "/" e o ID da tarefa.
-EX.: http://127.0.0.1:5000/tasks/1, para editar a tarefa cujo ID é 1.
+![Terminal](images/terminal.png)
+
+Caso deseje encerrar o servidor, digite CTRL+C no terminal.
+
+## Como testar a API:
+Você pode consumir a API pelo Postman ou pelos arquivos de teste que criei, sendo que um deles utiliza a biblioteca requests e o outro usa pytest pra rodar os testes.
+
+
+### Usando Postman
+
+![Imagem Postman 1](images/postman1.png)
+
+Primeiro, certifique-se de que você possui a extensão baixada. Caso não possua, pesquise "postman" na aba de extensões e instale-a.
+
+![Imagem Postman 2](images/postman2.png)
+![Imagem Postman 3](images/postman3.png)
+
+Com a extensão instalada, você já pode testar a API.
+
+1. com a API funcionando, insira no campo de URL a seguinte URL: http://127.0.0.1:5000/tasks
+
+![Imagem Postman 4](images/postman4.png)
+
+2. vá na aba "Authorization" e selecione "Basic Auth". após isso, insira "admin" como usuário e "admin123" como senha.
+
+![Imagem Postman 5](images/postman5.png)
+
+3. vá na aba "Headers" e digite: "content-type" como key, "application/json" como value.
+
+![Imagem Postman 6](images/postman6.png)
+
+A partir daqui, já é possível executar o método "GET", pois ele não recebe nenhum parâmetro.
+
+4. Caso queira executar o método "POST", selecione o mesmo no menu ao lado do campo de URL. após isso, vá ao body e selecione "raw". uma vez selecionado, você pode inserir os dados que desejar (título, descrição e marcar como feito ou não), mas tome cuidado com as condições. O resultado deve ser o seguinte:
+
+![Imagem Postman 7](images/postman7.png)
+
+5. Para executar os métodos "PUT" e "DELETE", é preciso adicionar "/<id-da-tarefa>" à URL. EX.:
+
+![Imagem Postman 8](images/postman8.png)
+
+O método "DELETE" não necessita nenhum parâmetro a mais, diferente do método "PUT".
+
+6. Para executar o método "PUT", o processo é semelhante ao processo do método "POST": selecione o mesmo no menu ao lado do campo de URL. após isso, vá ao body e selecione "raw". uma vez selecionado, você pode alterar os dados que desejar (título, descrição e marcar como feito ou não), mas tome cuidado com as condições. O resultado deve ser o seguinte:
+
+![Imagem Postman 9](images/postman9.png)
+
+Pronto! Agora você já sabe como fazer as requisições através do Postman.
 
 ## Observações importantes:
 1. A API usa SQLite para armazenar os dados, mas pretendo evoluir esse serviço de banco de dados futuramente
