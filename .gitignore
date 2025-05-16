@@ -4,5 +4,5 @@
 # ignora o pycache
 /scripts/__pycache__
 
-# ignora o tasks.json que armazena os dados da API
-/scripts/tasks.json
+# ignora o banco de dados da API
+/scripts/instance

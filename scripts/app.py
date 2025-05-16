@@ -1,50 +1,67 @@
+from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, jsonify # importando as funções necessárias do Flask para a API
-from saves import *
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
+db = SQLAlchemy(app)
 
-tasks = load_tasks() # onde serão armazenados os dados
-next_id = max([task['id'] for task in tasks], default=0) + 1 # define o número do ID de cada tarefa
+class Task(db.Model): # cria um modelo de tarefa
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(250))
+    done = db.Column(db.Boolean, default=False)
+
+with app.app_context():
+    db.create_all() # define o número do ID de cada tarefa
 
 @app.route('/tasks', methods=['POST']) # método que envia dados para a API
 def create_task(): # cria tarefa com nome, descrição e ID
-    global next_id
-    data = request.json
-    if not data.get('title') or not data.get('description'): # checando se há nome e descrição
-        return jsonify({'message': 'Title and description are required'}), 401
-    data['id'] = next_id
-    data['done'] = bool(data.get('done'))
-    tasks.append(data)
-    save_tasks(tasks)
-    next_id += 1
-    return jsonify(data), 201
+    data = request.get_json()
+    new_task = Task(
+        title=data['title'],
+        description=data.get('description', ''),
+        done=data.get('done', False)
+    )
+    db.session.add(new_task)
+    db.session.commit()
+    return jsonify({
+        'id': new_task.id,
+        'title': new_task.title,
+        'description': new_task.description,
+        'done': new_task.done,
+    }), 201
 
 @app.route('/tasks', methods=['GET']) # método que busca dados da API
 def read_tasks(): # retorna uma lista com as tarefas cadastrados
-    return jsonify(tasks), 200
+    tasks = Task.query.all()
+    return jsonify([{
+            'id': task.id,
+            'title': task.title,
+            'description': task.description,
+            'done': task.done,
+        } for task in tasks])
 
 @app.route('/tasks/<int:task_id>', methods=['PUT']) # método que atualiza dados já existentes na API
 def update_task(task_id): # atualiza dados de uma tarefa específica
-    data = request.json
-    if not data.get('title') or not data.get('description'): # checando se há nome e descrição
-        return jsonify({'message': 'Title and description are required'}), 401
-    for task in tasks:
-        if task['id'] == task_id:
-            task['title'] = data['title']
-            task['description'] = data['description']
-            task['done'] = bool(data.get('done'))
-            save_tasks(tasks)
-            return jsonify(task), 200
-    return jsonify({'message': 'Task not found'}), 404
+    task = Task.query.get_or_404(task_id)
+    data = request.get_json()
+    task.title = data.get('title', task.title)
+    task.description = data.get('description', task.description)
+    task.done = data.get('done', task.done)
+    db.session.commit()
+    return jsonify({
+        'id': task.id,
+        'title': task.title,
+        'description': task.description,
+        'done': task.done,
+    })
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE']) # método que deleta dados de uma API
 def delete_task(task_id): # deleta uma tarefa específica
-    for task in tasks:
-        if task['id'] == task_id:
-            tasks.remove(task)
-            save_tasks(tasks)
-            return jsonify({'message': 'Task deleted'}), 204
-    return jsonify({'message': 'Task not found'}), 404
+    task = Task.query.get_or_404(task_id)
+    db.session.delete(task)
+    db.session.commit()
+    return '', 204
 
 if __name__ == '__main__':
     app.run(debug=True) # roda o servidor (usando waitress para rodar sem exceções)
