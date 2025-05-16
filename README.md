@@ -26,16 +26,18 @@ pip install -r requirements.txt
 cd scripts
 waitress-serve --port=5000 app:app
 
-5. rode o tests.py em outro terminal, com o comando:
+5. rode os scripts de teste em outro terminal, com o comando:
 cd scripts
-python tests.py
+python test_request.py (teste usando a biblioteca requests)
+pytest test_auto.py (teste automatizado usando pytest)
 
 OU, SE POSSÍVEL:
-
 faça as requisições HTTP direto do Postman ou do Postcode, com a URL:
 http://127.0.0.1:5000/tasks
 para editar uma tarefa isolada, adicionar "/" e o ID da tarefa.
 EX.: http://127.0.0.1:5000/tasks/1, para editar a tarefa cujo ID é 1.
+
+Em breve farei uma documentação mais profunda da API como um todo.
 
 ## Observações importantes:
 1. A API usa SQLite para armazenar os dados, mas pretendo evoluir esse serviço de banco de dados futuramente
