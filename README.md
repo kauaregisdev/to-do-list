@@ -9,7 +9,7 @@ Python 3.13
 Ambiente virtual (recomendado)
 Bibliotecas (para baixá-las, pip install -r requirements.txt)
 
-## Sobre a API
+## Sobre a API:
 Essa é uma API que faz busca e armazenamento de tarefas. Cada tarefa possui um ID, um título, um boolean que determina se a atividade foi feita e a data de criação ou atualização, obrigatoriamente. É possível que a tarefa possua uma descrição, mas não é obrigatório.
 
 A API é feita com Flask e integrada ao SQLite, através das configurações iniciais:
@@ -35,7 +35,7 @@ Após isso, temos cada função básica de consulta, que são criar, acessar, at
 ![Função deletar tarefa](images/delete.png)
 
 
-Vejamos uma por uma, começando com a função que cria tarefas.
+### Criar uma tarefa
 
 ![Função criar tarefa](images/create.png)
 
@@ -44,7 +44,7 @@ A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicion
 
 
 
-Agora, com a função que mostra todas as tarefas criadas.
+### Mostrar todas as tarefas criadas
 
 ![Função ver tarefas](images/read.png)
 
@@ -53,7 +53,7 @@ A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicion
 
 
 
-Há, também, uma função que atualiza uma tarefa já existente.
+### Atualizar uma tarefa já existente
 
 ![Função atualizar tarefa](images/update.png)
 
@@ -64,7 +64,7 @@ Caso a consulta no início da função não encontre nenhum objeto Task, é reto
 
 
 
-Por último, há a função que deleta uma tarefa.
+### Deletar uma tarefa
 
 ![Função deletar tarefa](images/delete.png)
 
