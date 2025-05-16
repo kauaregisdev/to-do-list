@@ -6,3 +6,6 @@
 
 # ignora o banco de dados da API
 /scripts/instance
+
+# ignora o pytest_cache
+/scripts/.pytest_cache
