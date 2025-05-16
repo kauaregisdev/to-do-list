@@ -128,7 +128,7 @@ A partir daqui, já é possível executar o método "GET", pois ele não recebe 
 
 ![Imagem Postman 7](images/postman7.png)
 
-5. Para executar os métodos "PUT" e "DELETE", é preciso adicionar "/<id-da-tarefa>" à URL. EX.:
+5. Para executar os métodos "PUT" e "DELETE", é preciso adicionar "/" e o ID da tarefa à URL. EX.:
 
 ![Imagem Postman 8](images/postman8.png)
 
