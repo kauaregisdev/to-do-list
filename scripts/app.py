@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, Response, request, jsonify # importando as funções necessárias do Flask para a API
 from functools import wraps
-from datetime import datetime
+from datetime import datetime, UTC
 
 USERNAME = 'admin'
 PASSWORD = 'admin123'
@@ -50,8 +50,8 @@ class Task(db.Model): # cria um modelo de tarefa
     title = db.Column(db.String(60), nullable=False)
     description = db.Column(db.String(250))
     done = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(UTC))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
 with app.app_context():
     db.create_all()
@@ -62,6 +62,8 @@ def create_task(): # cria tarefa com nome, descrição e ID
     data = request.get_json()
     if not data or 'title' not in data or not data['title'].strip():
         return jsonify({'error': '"Title" field is required'}), 400
+    if len(data.get('title')) > 60:
+        return jsonify({'error': 'Title must not surpass 60 characters'}), 400
     if len(data.get('description', '')) > 250:
         return jsonify({'error': 'Description must not surpass 250 characters'}), 400
     new_task = Task(
@@ -100,6 +102,8 @@ def update_task(task_id): # atualiza dados de uma tarefa específica
         return jsonify({'error': 'Data was not provided'}), 400
     if 'title' in data and not data['title'].strip():
         return jsonify({'error': '"Title" field cannot be void'}), 400
+    if len(data['title']) > 60:
+        return jsonify({'error': 'Title must not surpass 60 characters'}), 400
     if 'description' in data and len(data['description']) > 250:
         return jsonify({'error': 'Description must not surpass 250 characters'}), 400
     task.title = data.get('title', task.title)
