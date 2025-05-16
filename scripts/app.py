@@ -8,7 +8,7 @@ db = SQLAlchemy(app)
 
 class Task(db.Model): # cria um modelo de tarefa
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120), nullable=False)
+    title = db.Column(db.String(60), nullable=False)
     description = db.Column(db.String(250))
     done = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -43,6 +43,7 @@ def read_tasks(): # retorna uma lista com as tarefas cadastrados
             'title': task.title,
             'description': task.description,
             'done': task.done,
+            'created_at': task.created_at
         } for task in tasks]), 200
 
 @app.route('/tasks/<int:task_id>', methods=['PUT']) # método que atualiza dados já existentes na API
