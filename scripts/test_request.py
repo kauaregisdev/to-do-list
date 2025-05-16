@@ -12,17 +12,18 @@ new_json = {
     'description': 'Learn the basics of Flask framework for Python',
     'done': 1
 }
+auth = ('admin', 'admin123')
 
-response = requests.post(url, json=json)
+response = requests.post(url, json=json, auth=auth)
 print('POST /tasks:', response.json())
 
-response = requests.get(url)
+response = requests.get(url, auth=auth)
 print('GET /tasks:', response.json())
 
-response = requests.put(user_url, json=new_json)
+response = requests.put(user_url, json=new_json, auth=auth)
 print('PUT /tasks:', response.json())
 
-response = requests.delete(user_url)
+response = requests.delete(user_url, auth=auth)
 if response.content:
     print('DELETE /tasks:', response.json())
 else:

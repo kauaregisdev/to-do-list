@@ -1,6 +1,29 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, request, jsonify # importando as funções necessárias do Flask para a API
+from flask import Flask, Response, request, jsonify # importando as funções necessárias do Flask para a API
+from functools import wraps
 from datetime import datetime
+
+USERNAME = 'admin'
+PASSWORD = 'admin123'
+
+def check_auth(username, password):
+    return username == USERNAME and password == PASSWORD
+
+def authenticate():
+    return Response(
+        'Access restricted.\n'
+        'Provide valid username and password.', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'}
+    )
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
@@ -18,6 +41,7 @@ with app.app_context():
     db.create_all()
 
 @app.route('/tasks', methods=['POST']) # método que envia dados para a API
+@requires_auth
 def create_task(): # cria tarefa com nome, descrição e ID
     data = request.get_json()
     new_task = Task(
@@ -36,6 +60,7 @@ def create_task(): # cria tarefa com nome, descrição e ID
     }), 201
 
 @app.route('/tasks', methods=['GET']) # método que busca dados da API
+@requires_auth
 def read_tasks(): # retorna uma lista com as tarefas cadastrados
     tasks = Task.query.all()
     return jsonify([{
@@ -47,6 +72,7 @@ def read_tasks(): # retorna uma lista com as tarefas cadastrados
         } for task in tasks]), 200
 
 @app.route('/tasks/<int:task_id>', methods=['PUT']) # método que atualiza dados já existentes na API
+@requires_auth
 def update_task(task_id): # atualiza dados de uma tarefa específica
     task = Task.query.get_or_404(task_id)
     data = request.get_json()
@@ -63,6 +89,7 @@ def update_task(task_id): # atualiza dados de uma tarefa específica
     }), 200
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE']) # método que deleta dados de uma API
+@requires_auth
 def delete_task(task_id): # deleta uma tarefa específica
     task = Task.query.get_or_404(task_id)
     db.session.delete(task)
