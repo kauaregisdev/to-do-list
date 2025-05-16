@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, jsonify # importando as funções necessárias do Flask para a API
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
@@ -10,9 +11,11 @@ class Task(db.Model): # cria um modelo de tarefa
     title = db.Column(db.String(120), nullable=False)
     description = db.Column(db.String(250))
     done = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 with app.app_context():
-    db.create_all() # define o número do ID de cada tarefa
+    db.create_all()
 
 @app.route('/tasks', methods=['POST']) # método que envia dados para a API
 def create_task(): # cria tarefa com nome, descrição e ID
@@ -29,6 +32,7 @@ def create_task(): # cria tarefa com nome, descrição e ID
         'title': new_task.title,
         'description': new_task.description,
         'done': new_task.done,
+        'created_at': new_task.created_at
     }), 201
 
 @app.route('/tasks', methods=['GET']) # método que busca dados da API
@@ -54,6 +58,7 @@ def update_task(task_id): # atualiza dados de uma tarefa específica
         'title': task.title,
         'description': task.description,
         'done': task.done,
+        'updated_at': task.updated_at
     })
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE']) # método que deleta dados de uma API
