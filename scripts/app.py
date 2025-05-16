@@ -29,6 +29,22 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
 db = SQLAlchemy(app)
 
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify({'error': 'Bad Request', 'message': str(error)}), 400
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return jsonify({'error': 'Unauthorized', 'message': str(error)}), 401
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not Found', 'message': str(error)}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({'error': 'Internal Server Error', 'message': str(error)}), 500
+
 class Task(db.Model): # cria um modelo de tarefa
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60), nullable=False)
@@ -44,6 +60,10 @@ with app.app_context():
 @requires_auth
 def create_task(): # cria tarefa com nome, descrição e ID
     data = request.get_json()
+    if not data or 'title' not in data or not data['title'].strip():
+        return jsonify({'error': '"Title" field is required'}), 400
+    if len(data.get('description', '')) > 250:
+        return jsonify({'error': 'Description must not surpass 250 characters'}), 400
     new_task = Task(
         title=data['title'],
         description=data.get('description', ''),
@@ -76,6 +96,12 @@ def read_tasks(): # retorna uma lista com as tarefas cadastrados
 def update_task(task_id): # atualiza dados de uma tarefa específica
     task = Task.query.get_or_404(task_id)
     data = request.get_json()
+    if not data:
+        return jsonify({'error': 'Data was not provided'}), 400
+    if 'title' in data and not data['title'].strip():
+        return jsonify({'error': '"Title" field cannot be void'}), 400
+    if 'description' in data and len(data['description']) > 250:
+        return jsonify({'error': 'Description must not surpass 250 characters'}), 400
     task.title = data.get('title', task.title)
     task.description = data.get('description', task.description)
     task.done = data.get('done', task.done)
