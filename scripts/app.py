@@ -43,7 +43,7 @@ def read_tasks(): # retorna uma lista com as tarefas cadastrados
             'title': task.title,
             'description': task.description,
             'done': task.done,
-        } for task in tasks])
+        } for task in tasks]), 200
 
 @app.route('/tasks/<int:task_id>', methods=['PUT']) # método que atualiza dados já existentes na API
 def update_task(task_id): # atualiza dados de uma tarefa específica
@@ -59,14 +59,14 @@ def update_task(task_id): # atualiza dados de uma tarefa específica
         'description': task.description,
         'done': task.done,
         'updated_at': task.updated_at
-    })
+    }), 200
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE']) # método que deleta dados de uma API
 def delete_task(task_id): # deleta uma tarefa específica
     task = Task.query.get_or_404(task_id)
     db.session.delete(task)
     db.session.commit()
-    return '', 204
+    return jsonify({'message': 'Task deleted'}), 204
 
 if __name__ == '__main__':
     app.run(debug=True) # roda o servidor (usando waitress para rodar sem exceções)
