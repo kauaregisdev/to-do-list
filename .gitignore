@@ -9,6 +9,3 @@
 
 # ignora o pytest_cache
 /scripts/.pytest_cache
-
-# ignora a pasta de imagens
-/images
