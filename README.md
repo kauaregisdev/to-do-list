@@ -13,6 +13,7 @@ Bibliotecas (para baixá-las, pip install -r requirements.txt)
 Essa é uma API que faz busca e armazenamento de tarefas. Cada tarefa possui um ID, um título, um boolean que determina se a atividade foi feita e a data de criação ou atualização, obrigatoriamente. É possível que a tarefa possua uma descrição, mas não é obrigatório.
 
 A API é feita com Flask e integrada ao SQLite, através das configurações iniciais:
+
 ![Configuração da API](images/appconfig.png)
 
 A variável "app" é o que define a existência do app Flask, e a variável "db" define o banco de dados.
@@ -24,25 +25,36 @@ A descrição pode ter até 250 caracteres, mas não é obrigatória.
 A variável "done" define se a tarefa foi concluída ou não, e é False por definição.
 As variáveis "created_at" e "updated_at" se atualizam conforme a data em que uma criação ou atualização é feita no banco de dados.
 
+
+
 Após isso, temos cada função básica de consulta, que são criar, acessar, atualizar e deletar dados do banco de dados da API.
+
 ![Função criar tarefa](images/create.png)
 ![Função ver tarefas](images/read.png)
 ![Função atualizar tarefa](images/update.png)
 ![Função deletar tarefa](images/delete.png)
 
+
 Vejamos uma por uma, começando com a função que cria tarefas.
+
 ![Função criar tarefa](images/create.png)
 
 A função busca a requisição do usuário e manda cada entrada como parâmetros para a criação de um objeto Task, que por sua vez é enviado ao banco de dados.
 A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicionário, com ID, título, descrição (se houver), status (feito ou não) e data de criação, e um código 201, que indica que a requisição foi bem-sucedida.
 
+
+
 Agora, com a função que mostra todas as tarefas criadas.
+
 ![Função ver tarefas](images/read.png)
 
 A função define uma variável tasks que faz uma consulta no banco de dados para buscar objetos Task existentes.
 A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicionário, com ID, título, descrição (se houver), status (feito ou não) e data de criação de cada tarefa, dentro de uma lista, e um código 200, que indica que a requisição foi bem-sucedida.
 
+
+
 Há, também, uma função que atualiza uma tarefa já existente.
+
 ![Função atualizar tarefa](images/update.png)
 
 A função recebe a chave primária (ID) da tarefa e faz uma consulta no banco de dados para ver se existe um objeto Task com o ID em questão.
@@ -50,7 +62,10 @@ Após isso, ela recebe a requisição na variável "data" e faz as mudanças que
 A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicionário, com ID, título, descrição (se houver), status (feito ou não) e data de atualização de cada tarefa, dentro de uma lista, e um código 200, que indica que a requisição foi bem-sucedida.
 Caso a consulta no início da função não encontre nenhum objeto Task, é retornado um código 404, indicando erro por não encontrar a tarefa requisitada.
 
+
+
 Por último, há a função que deleta uma tarefa.
+
 ![Função deletar tarefa](images/delete.png)
 
 A função recebe a chave primária (ID) da tarefa e faz uma consulta no banco de dados para ver se existe um objeto Task com o ID em questão.
