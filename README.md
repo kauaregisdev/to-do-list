@@ -5,8 +5,8 @@ Bem-vindo! Este projeto consiste numa API que gerencia uma lista de tarefas. Ela
 Funcionando, porém sujeito a receber novas implementações com o tempo. O projeto possui integração com SQLite para armazenamento de dados, roda num ambiente virtual e utiliza a biblioteca Waitress para dar deploy no servidor da API. No entanto, não foi feito ainda um sistema de checagem dos dados, ou mesmo de tratamento mais robusto de erros.
 
 ## Pré-requisitos:
-Python 3.13
-Ambiente virtual (recomendado)
+Python 3.13<br>
+Ambiente virtual (recomendado)<br>
 Bibliotecas (para baixá-las, pip install -r requirements.txt)
 
 ## Sobre a API:
@@ -18,14 +18,12 @@ A API é feita com Flask e integrada ao SQLite, através das configurações ini
 
 A variável "app" é o que define a existência do app Flask, e a variável "db" define o banco de dados.
 
-A classe "Task" define o modelo base pra todas as tarefas que forem criadas.
-A chave primária é o ID, que é sempre um inteiro que se adiciona 1 a cada cadastro.
-O título não pode passar de 60 caracteres e PRECISA existir.
-A descrição pode ter até 250 caracteres, mas não é obrigatória.
-A variável "done" define se a tarefa foi concluída ou não, e é False por definição.
-As variáveis "created_at" e "updated_at" se atualizam conforme a data em que uma criação ou atualização é feita no banco de dados.
-
-
+A classe "Task" define o modelo base pra todas as tarefas que forem criadas.<br>
+A chave primária é o ID, que é sempre um inteiro que se adiciona 1 a cada cadastro.<br>
+O título não pode passar de 60 caracteres e PRECISA existir.<br>
+A descrição pode ter até 250 caracteres, mas não é obrigatória.<br>
+A variável "done" define se a tarefa foi concluída ou não, e é False por definição.<br>
+As variáveis "created_at" e "updated_at" se atualizam conforme a data em que uma criação ou atualização é feita no banco de dados.<br>
 
 Após isso, temos cada função básica de consulta, que são criar, acessar, atualizar e deletar dados do banco de dados da API.
 
@@ -39,7 +37,7 @@ Após isso, temos cada função básica de consulta, que são criar, acessar, at
 
 ![Função criar tarefa](images/create.png)
 
-A função busca a requisição do usuário e manda cada entrada como parâmetros para a criação de um objeto Task, que por sua vez é enviado ao banco de dados.
+A função busca a requisição do usuário e manda cada entrada como parâmetros para a criação de um objeto Task, que por sua vez é enviado ao banco de dados.<br>
 A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicionário, com ID, título, descrição (se houver), status (feito ou não) e data de criação, e um código 201, que indica que a requisição foi bem-sucedida.
 
 
@@ -48,7 +46,7 @@ A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicion
 
 ![Função ver tarefas](images/read.png)
 
-A função define uma variável tasks que faz uma consulta no banco de dados para buscar objetos Task existentes.
+A função define uma variável tasks que faz uma consulta no banco de dados para buscar objetos Task existentes.<br>
 A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicionário, com ID, título, descrição (se houver), status (feito ou não) e data de criação de cada tarefa, dentro de uma lista, e um código 200, que indica que a requisição foi bem-sucedida.
 
 
@@ -58,9 +56,9 @@ A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicion
 ![Função atualizar tarefa](images/update.png)
 
 A função recebe a chave primária (ID) da tarefa e faz uma consulta no banco de dados para ver se existe um objeto Task com o ID em questão.
-Após isso, ela recebe a requisição na variável "data" e faz as mudanças que forem necessárias, com o método "data.get('<nome-da-chave>', task.<nome-da-chave>)", para atualizar o banco de dados logo em seguida.
-A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicionário, com ID, título, descrição (se houver), status (feito ou não) e data de atualização de cada tarefa, dentro de uma lista, e um código 200, que indica que a requisição foi bem-sucedida.
-Caso a consulta no início da função não encontre nenhum objeto Task, é retornado um código 404, indicando erro por não encontrar a tarefa requisitada.
+Após isso, ela recebe a requisição na variável "data" e faz as mudanças que forem necessárias, com o método "data.get('<nome-da-chave>', task.<nome-da-chave>)", para atualizar o banco de dados logo em seguida.<br>
+A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicionário, com ID, título, descrição (se houver), status (feito ou não) e data de atualização de cada tarefa, dentro de uma lista, e um código 200, que indica que a requisição foi bem-sucedida.<br>
+Caso a consulta no início da função não encontre nenhum objeto Task, é retornado um código 404, indicando erro por não encontrar a tarefa requisitada.<br>
 
 
 
@@ -69,34 +67,51 @@ Caso a consulta no início da função não encontre nenhum objeto Task, é reto
 ![Função deletar tarefa](images/delete.png)
 
 A função recebe a chave primária (ID) da tarefa e faz uma consulta no banco de dados para ver se existe um objeto Task com o ID em questão.
-Após isso, a tarefa em questão é deletada, e um jsonify com a mensagem 'Task deleted' (tarefa deletada) é retornado, junto com um código 204, que indica que a requisição foi bem-sucedida.
+Após isso, a tarefa em questão é deletada, e um jsonify com a mensagem 'Task deleted' (tarefa deletada) é retornado, junto com um código 204, que indica que a requisição foi bem-sucedida.<br>
 Caso a consulta no início da função não encontre nenhum objeto Task, é retornado um código 404, indicando erro por não encontrar a tarefa requisitada.
 
 ## Como executar o código:
-1. clone o repositório, executando no terminal os seguintes comandos:
-git clone https://github.com/kauaregisdev/to-do-list.git
-cd to-do-list
+1. clone o repositório, executando no terminal os seguintes comandos:<br>
+git clone https://github.com/kauaregisdev/to-do-list.git<br>
+cd to-do-list<br>
 
-2. crie e ative o ambiente virtual, com os comandos:
-python -m venv venv
-venv\Scripts\Activate
+![Imagem Terminal 1](images/terminal1.png)
+![Imagem Terminal 2](images/terminal2.png)
+
+2. crie e ative o ambiente virtual, com os comandos:<br>
+python -m venv venv<br>
+venv\Scripts\Activate<br>
 OBSERVAÇÃO: caso haja uma pasta venv/ nos arquivos do projeto, delete-a antes de criar um novo ambiente virtual!
 
-3. instale as dependências pelo terminal, com o comando:
+![Imagem Terminal 3](images/terminal3.png)
+![Imagem Terminal 4](images/terminal4.png)
+
+3. instale as dependências pelo terminal, com o comando:<br>
 pip install -r requirements.txt
 
-4. faça o deploy local do app Flask, com o comando:
-cd scripts
+![Imagem Terminal 5](images/terminal5.png)
+
+4. faça o deploy local do app Flask, com o comando:<br>
+cd scripts<br>
 waitress-serve --port=5000 app:app
 
 Se você fez tudo certo, a API já está funcionando a partir daqui! A resposta do terminal deve ser a seguinte:
 
-![Terminal](images/terminal.png)
+![Imagem Terminal 6](images/terminal6.png)
 
 Caso deseje encerrar o servidor, digite CTRL+C no terminal.
 
+5. para rodar os testes com código, crie outro terminal e digite:<br>
+activate (ou venv\Scripts\Activate)<br>
+cd scripts
+
+![Imagem Terminal 7](images/terminal7.png)
+
+Agora seu terminal para rodar os testes com código está criado.
+
 ## Como testar a API:
-Você pode consumir a API pelo Postman ou pelos arquivos de teste que criei, sendo que um deles utiliza a biblioteca requests e o outro usa pytest pra rodar os testes.
+Você pode consumir a API pelo Postman ou pelos arquivos de teste que criei, sendo que um deles utiliza a biblioteca requests e o outro usa pytest pra rodar os testes.<br>
+OBSERVAÇÃO: O ambiente virtual deve estar ativo e com as dependências instaladas para rodar os testes!
 
 
 ### Usando Postman
@@ -139,6 +154,76 @@ O método "DELETE" não necessita nenhum parâmetro a mais, diferente do método
 ![Imagem Postman 9](images/postman9.png)
 
 Pronto! Agora você já sabe como fazer as requisições através do Postman.
+
+
+
+### Usando requests
+Você já deve possuir a biblioteca requests instalada no ambiente virtual. Portanto, você já pode testar a API.
+
+1. crie uma variável "auth". Essa variável será uma tupla, com o nome do usuário e a senha, respectivamente.
+
+![Imagem Requests 1](images/requests1.png)
+
+2. crie uma variável "url" que vai armazenar a URL principal da API: http://127.0.0.1:5000/tasks. Em seguida, crie um dicionário "json" contendo pelo menos o título da tarefa. Esse dicionário é a sua tarefa, que será enviada para o banco de dados.
+
+![Imagem Requests 2](images/requests2.png)
+
+3. após isso, você pode realizar os métodos "POST", para enviar para o banco de dados a tarefa que você criou, e "GET", para ver quantas tarefas existem.
+
+![Imagem Requests 3](images/requests3.png)
+
+4. para utilizar os métodos "PUT" e "DELETE", você precisará adicionar "/" e o ID da tarefa à URL. EX.: http://127.0.0.1:5000/tasks/1. Caso deseje, você pode alterar a tarefa que você criou ao alterar o dicionário que você criou no cabeçalho do código.
+
+![Imagem Requests 4](images/requests4.png)
+
+Eu optei por criar novas variáveis, mas você também pode alterar a variável antiga.
+
+5. com a URL nova, é possível realizar os métodos "PUT", para atualizar a tarefa que você enviou anteriormente pro banco de dados, e "DELETE", para deletar essa mesma tarefa.
+
+![Imagem Requests 5](images/requests5.png)
+
+6. no terminal para rodar os códigos que você criou, digite:<br>
+python nome-do-arquivo.py (EX.: python test_request.py)
+
+Pronto! Você agora sabe fazer as requisições usando a biblioteca requests.
+
+![Imagem Requests 6](images/requests6.png)
+
+### Usando Pytest
+Você já deve possuir a biblioteca Pytest instalada no ambiente virtual. Portanto, você já pode testar a API.
+
+1. faça as importações necessárias:
+
+![Imagem Pytest 1](images/pytest1.png)
+
+A função "b64encode" é o que vai gerar o token de acesso do usuário.<br>
+A decorator "fixture" é o que vai garantir que os testes sejam feitos.<br>
+As variáveis "app" e "db" representam a API REST, que é o app Flask que criei, e o banco de dados SQLite ao qual a API está integrada.
+
+2. antes de rodar cada teste, crie as funções de autenticação:
+
+![Imagem Pytest 2](images/pytest2.png)
+
+Essas funções garantirão que a autenticação será feita e bem-sucedida em cada requisição.
+
+3. defina uma função cliente. Essa função será o motor do teste de todas as requisições HTTP que você fará.
+
+![Imagem Pytest 3](images/pytest3.png)
+
+4. você irá definir uma função pra cada requisição, e o Pytest vai executá-las individualmente. As funções devem ter o seguinte modelo:
+
+![Imagem Pytest 4](images/pytest4.png)
+
+Você pode alterar título, descrição e marcar como feita à vontade em cada uma delas.
+
+5. no terminal para rodar os códigos que você criou, digite:<br>
+pytest nome-do-arquivo.py (EX.: pytest test_auto.py)
+
+
+
+Todos os testes devem ser bem-sucedidos. Ignore warnings, caso haja.
+
+Pronto! Você aprendeu a fazer os testes de requisição usando Pytest.
 
 ## Observações importantes:
 1. A API usa SQLite para armazenar os dados, mas pretendo evoluir esse serviço de banco de dados futuramente

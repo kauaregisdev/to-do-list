@@ -9,3 +9,6 @@
 
 # ignora o pytest_cache
 /scripts/.pytest_cache
+
+# ignora os testes
+/tests

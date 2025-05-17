@@ -102,7 +102,7 @@ def update_task(task_id): # atualiza dados de uma tarefa específica
         return jsonify({'error': 'Data was not provided'}), 400
     if 'title' in data and not data['title'].strip():
         return jsonify({'error': '"Title" field cannot be void'}), 400
-    if len(data['title']) > 60:
+    if 'title' in data and len(data['title']) > 60:
         return jsonify({'error': 'Title must not surpass 60 characters'}), 400
     if 'description' in data and len(data['description']) > 250:
         return jsonify({'error': 'Description must not surpass 250 characters'}), 400
