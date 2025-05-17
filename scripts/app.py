@@ -1,7 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy # importando a função para usar banco de dados na API
 from flask import Flask, Response, request, jsonify # importando as funções necessárias do Flask para a API
-from functools import wraps
-from datetime import datetime, UTC
+from functools import wraps # importando função para criar uma decorator
+from datetime import datetime, UTC # importando função que retorna a data atual
 
 USERNAME = 'admin'
 PASSWORD = 'admin123'

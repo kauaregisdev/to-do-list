@@ -12,11 +12,23 @@ Bibliotecas (para baixá-las, pip install -r requirements.txt)
 ## Sobre a API:
 Essa é uma API que faz busca e armazenamento de tarefas. Cada tarefa possui um ID, um título, um boolean que determina se a atividade foi feita e a data de criação ou atualização, obrigatoriamente. É possível que a tarefa possua uma descrição, mas não é obrigatório.
 
-A API é feita com Flask e integrada ao SQLite, através das configurações iniciais:
+Para configurar o app, foi necessário os seguintes imports:
 
-![Configuração da API](images/appconfig.png)
+![Imagem appconfig 1](images/appconfig1.png)
+
+Após isso, são feitas as configurações de autenticação do usuário:
+
+![Imagem appconfig 2](images/appconfig2.png)
+
+O username e o password corretos são definidos como constantes no cabeçalho. Após isso, são criadas funções que checam existência de autenticação e se condiz com o usuário e a senha definidos anteriormente.
+
+Após isso, o app é configurado:
+
+![Imagem appconfig 3](images/appconfig3.png)
 
 A variável "app" é o que define a existência do app Flask, e a variável "db" define o banco de dados.
+
+A decorator "@app.errorhandler" faz tratamento de erro, dependendo do erro que você quer achar. Nesse caso, fiz para bad request, não autorizado, não encontrado ou erro de servidor.
 
 A classe "Task" define o modelo base pra todas as tarefas que forem criadas.<br>
 A chave primária é o ID, que é sempre um inteiro que se adiciona 1 a cada cadastro.<br>
@@ -25,12 +37,9 @@ A descrição pode ter até 250 caracteres, mas não é obrigatória.<br>
 A variável "done" define se a tarefa foi concluída ou não, e é False por definição.<br>
 As variáveis "created_at" e "updated_at" se atualizam conforme a data em que uma criação ou atualização é feita no banco de dados.<br>
 
-Após isso, temos cada função básica de consulta, que são criar, acessar, atualizar e deletar dados do banco de dados da API.
-
-![Função criar tarefa](images/create.png)
-![Função ver tarefas](images/read.png)
-![Função atualizar tarefa](images/update.png)
-![Função deletar tarefa](images/delete.png)
+Após isso, temos cada função básica de consulta, que são criar, acessar, atualizar e deletar dados do banco de dados da API. Importante ressaltar que todas as funções de consulta serão acompanhadas de duas decorators: @app.route e @requires_auth.<br>
+A decorator @app.route define a URL em que cada função poderá ser chamada. EX.: http://127.0.0.1:5000/tasks, para "POST" e "GET". Para "PUT" e "DELETE", a mesma URL, só que adicionando "/" e o ID da tarefa.<br>
+A decorator @requires_auth protege as rotas de cada função, obrigando o usuário a inserir um usuário e uma senha pré-cadastrados.
 
 
 ### Criar uma tarefa
@@ -69,6 +78,14 @@ Caso a consulta no início da função não encontre nenhum objeto Task, é reto
 A função recebe a chave primária (ID) da tarefa e faz uma consulta no banco de dados para ver se existe um objeto Task com o ID em questão.
 Após isso, a tarefa em questão é deletada, e um jsonify com a mensagem 'Task deleted' (tarefa deletada) é retornado, junto com um código 204, que indica que a requisição foi bem-sucedida.<br>
 Caso a consulta no início da função não encontre nenhum objeto Task, é retornado um código 404, indicando erro por não encontrar a tarefa requisitada.
+
+
+
+### Rodar o servidor
+
+![Condição apprun](images/apprun.png)
+
+Essa condição é o que torna todo o sistema possível de ser rodado.
 
 ## Como executar o código:
 1. clone o repositório, executando no terminal os seguintes comandos:<br>
