@@ -155,6 +155,8 @@ O método "DELETE" não necessita nenhum parâmetro a mais, diferente do método
 
 Pronto! Agora você já sabe como fazer as requisições através do Postman.
 
+![Imagem Postman 10](images/postman10.png)
+
 
 
 ### Usando requests
