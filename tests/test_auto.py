@@ -26,7 +26,7 @@ def get_token(client):
 def auth_header(token):
     return {'Authorization': token}
 
-def test_create_task(client):
+def test_create_task_success(client):
     token = get_token(client)
     response = client.post('/tasks', json={
         'title': 'Study Flask',
@@ -38,7 +38,7 @@ def test_create_task(client):
     assert data['title'] == 'Study Flask'
     assert 'created_at' in data
 
-def test_read_tasks(client):
+def test_read_tasks_success(client):
     token = get_token(client)
     client.post('/tasks', json={'title': 'Study Django'}, headers=auth_header(token))
     response = client.get('/tasks', headers=auth_header(token))
@@ -47,7 +47,7 @@ def test_read_tasks(client):
     assert isinstance(data, list)
     assert len(data) >= 1
 
-def test_update_task(client):
+def test_update_task_success(client):
     token = get_token(client)
     post = client.post('/tasks', json={'title': 'Study PHP'}, headers=auth_header(token))
     task_id = post.get_json()['id']
@@ -56,7 +56,7 @@ def test_update_task(client):
     data = response.get_json()
     assert data['done'] is True
 
-def test_delete_task(client):
+def test_delete_task_success(client):
     token = get_token(client)
     post = client.post('/tasks', json={'title': 'Study Java'}, headers=auth_header(token))
     task_id = post.get_json()['id']
