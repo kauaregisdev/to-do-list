@@ -1,27 +1,37 @@
+import jwt # importando a biblioteca do JSON Web Token
 from flask_sqlalchemy import SQLAlchemy # importando a função para usar banco de dados na API
 from flask import Flask, Response, request, jsonify # importando as funções necessárias do Flask para a API
 from functools import wraps # importando função para criar uma decorator
-from datetime import datetime, UTC # importando função que retorna a data atual
+from datetime import timedelta, datetime, UTC # importando função que retorna a data atual
 
 USERNAME = 'admin'
 PASSWORD = 'admin123'
+SECRET_KEY = 'ILgZzD9niA;b2bf'
 
-def check_auth(username, password):
-    return username == USERNAME and password == PASSWORD
+def generate_token(username):
+    payload = {
+        'username': username,
+        'exp': datetime.now(UTC) + timedelta(hours=1)
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
-def authenticate():
-    return Response(
-        'Access restricted.\n'
-        'Provide valid username and password.', 401,
-        {'WWW-Authenticate': 'Basic realm="Login Required"'}
-    )
+def verify_token(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        return payload['username']
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return None
 
-def requires_auth(f):
+def requires_jwt(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
-            return authenticate()
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({'error': 'Token missing'}), 401
+        token = auth_header.split(' ')[1]
+        username = verify_token(token)
+        if not username:
+            return jsonify({'error': 'Invalid or expired token'}), 401
         return f(*args, **kwargs)
     return decorated
 
@@ -56,8 +66,18 @@ class Task(db.Model): # cria um modelo de tarefa
 with app.app_context():
     db.create_all()
 
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    if username == USERNAME and password == PASSWORD:
+        token = generate_token(username)
+        return jsonify({'Authorization': 'Bearer '+token})
+    return jsonify({'error': 'Invalid credentials'}), 401
+
 @app.route('/tasks', methods=['POST']) # método que envia dados para a API
-@requires_auth
+@requires_jwt
 def create_task(): # cria tarefa com nome, descrição e ID
     data = request.get_json()
     if not data or 'title' not in data or not data['title'].strip():
@@ -82,7 +102,7 @@ def create_task(): # cria tarefa com nome, descrição e ID
     }), 201
 
 @app.route('/tasks', methods=['GET']) # método que busca dados da API
-@requires_auth
+@requires_jwt
 def read_tasks(): # retorna uma lista com as tarefas cadastrados
     tasks = Task.query.all()
     return jsonify([{
@@ -94,7 +114,7 @@ def read_tasks(): # retorna uma lista com as tarefas cadastrados
         } for task in tasks]), 200
 
 @app.route('/tasks/<int:task_id>', methods=['PUT']) # método que atualiza dados já existentes na API
-@requires_auth
+@requires_jwt
 def update_task(task_id): # atualiza dados de uma tarefa específica
     task = Task.query.get_or_404(task_id)
     data = request.get_json()
@@ -119,7 +139,7 @@ def update_task(task_id): # atualiza dados de uma tarefa específica
     }), 200
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE']) # método que deleta dados de uma API
-@requires_auth
+@requires_jwt
 def delete_task(task_id): # deleta uma tarefa específica
     task = Task.query.get_or_404(task_id)
     db.session.delete(task)
