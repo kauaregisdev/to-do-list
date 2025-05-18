@@ -1,6 +1,7 @@
+from os import environ
 import jwt # importando a biblioteca do JSON Web Token
 from flask_sqlalchemy import SQLAlchemy # importando a função para usar banco de dados na API
-from flask import Flask, Response, request, jsonify # importando as funções necessárias do Flask para a API
+from flask import Flask, abort, request, jsonify # importando as funções necessárias do Flask para a API
 from functools import wraps # importando função para criar uma decorator
 from datetime import timedelta, datetime, UTC # importando função que retorna a data atual
 
@@ -36,7 +37,10 @@ def requires_jwt(f):
     return decorated
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin123@localhost:5000/to_do_list'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
+    'DATABASE_URL',
+    'postgresql://admin:admin123@localhost:5000/to_do_list'
+)
 db = SQLAlchemy(app)
 
 @app.errorhandler(400)
@@ -117,7 +121,9 @@ def read_tasks(): # retorna uma lista com as tarefas cadastrados
 @app.route('/tasks/<int:task_id>', methods=['PUT']) # método que atualiza dados já existentes na API
 @requires_jwt
 def update_task(task_id): # atualiza dados de uma tarefa específica
-    task = Task.query.get_or_404(task_id)
+    task = db.session.get(Task, task_id)
+    if not task:
+        abort(404)
     data = request.get_json()
     if not data:
         return jsonify({'error': 'Data was not provided'}), 400
@@ -142,7 +148,9 @@ def update_task(task_id): # atualiza dados de uma tarefa específica
 @app.route('/tasks/<int:task_id>', methods=['DELETE']) # método que deleta dados de uma API
 @requires_jwt
 def delete_task(task_id): # deleta uma tarefa específica
-    task = Task.query.get_or_404(task_id)
+    task = db.session.get(Task, task_id)
+    if not task:
+        abort(404)
     db.session.delete(task)
     db.session.commit()
     return jsonify({'message': 'Task deleted'}), 204
