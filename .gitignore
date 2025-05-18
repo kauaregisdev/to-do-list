@@ -8,6 +8,7 @@
 /scripts/instance
 
 # ignora o pytest_cache
+/.pytest_cache
 /scripts/.pytest_cache
 
 # ignora os testes
