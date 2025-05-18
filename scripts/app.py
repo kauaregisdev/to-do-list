@@ -36,7 +36,7 @@ def requires_jwt(f):
     return decorated
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin123@localhost:5000/to_do_list'
 db = SQLAlchemy(app)
 
 @app.errorhandler(400)
@@ -64,6 +64,7 @@ class Task(db.Model): # cria um modelo de tarefa
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
 @app.route('/login', methods=['POST'])
