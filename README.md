@@ -28,7 +28,7 @@ Após isso, o app é configurado:
 
 A variável "app" é o que define a existência do app Flask, e a variável "db" define o banco de dados.
 
-A decorator "@app.errorhandler" faz tratamento de erro, dependendo do erro que você quer achar. Nesse caso, fiz para bad request, não autorizado, não encontrado ou erro de servidor.
+A decorator "@app.errorhandler" faz tratamento de erro, dependendo do erro que deve se achar. Nesse caso, ocorre tratamento de erro para bad request, não autorizado, não encontrado ou erro de servidor.
 
 A classe "Task" define o modelo base pra todas as tarefas que forem criadas.<br>
 A chave primária é o ID, que é sempre um inteiro que se adiciona 1 a cada cadastro.<br>
@@ -36,6 +36,15 @@ O título não pode passar de 60 caracteres e PRECISA existir.<br>
 A descrição pode ter até 250 caracteres, mas não é obrigatória.<br>
 A variável "done" define se a tarefa foi concluída ou não, e é False por definição.<br>
 As variáveis "created_at" e "updated_at" se atualizam conforme a data em que uma criação ou atualização é feita no banco de dados.<br>
+
+A função "task_to_dict" recebe um parâmetro task, que representa a tarefa em si, e retorna em forma de dicionário os dados dessa tarefa: ID, título, descrição, marcador de feita e data de criação/atualização.<br>
+Essa função será útil para o método "GET", que irá retornar todas as tarefas existentes.
+
+Após isso, temos um bloco específico que reinicia o banco de dados a cada vez que a API sofre deploy:
+
+![Imagem appconfig 4](images/appconfig4.png)
+
+As funções "drop_all" e "create_all" irão deletar o banco existente e criar um novo, respectivamente.
 
 Após isso, temos cada função básica de consulta, que são criar, acessar, atualizar e deletar dados do banco de dados da API. Importante ressaltar que todas as funções de consulta serão acompanhadas de duas decorators: @app.route e @requires_auth.<br>
 A decorator @app.route define a URL em que cada função poderá ser chamada. EX.: http://127.0.0.1:5000/tasks, para "POST" e "GET". Para "PUT" e "DELETE", a mesma URL, só que adicionando "/" e o ID da tarefa.<br>
