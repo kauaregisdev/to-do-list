@@ -266,5 +266,4 @@ Todos os testes devem ser bem-sucedidos. Ignore warnings, caso haja.
 ![Imagem Pytest 9](images/pytest9.png)
 
 ## Observações importantes:
-1. A API usa SQLite para armazenar os dados, mas pretendo evoluir esse serviço de banco de dados futuramente
-2. O projeto, apesar de estar funcionando, está sujeito a sofrer alterações e implementações de novas funções no futuro
+1. O projeto, apesar de estar funcionando, está sujeito a sofrer alterações e implementações de novas funções no futuro
