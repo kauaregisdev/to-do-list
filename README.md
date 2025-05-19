@@ -145,6 +145,7 @@ Importante ressaltar que o ambiente virtual deve estar ativo e com as dependênc
 
 
 ### Usando Postman
+<!-- editar imagens e informações -->
 
 ![Imagem Postman 1](images/postman1.png)
 
@@ -169,21 +170,19 @@ Com a extensão instalada, você já pode testar a API.
 
 A partir daqui, já é possível executar o método "GET", pois ele não recebe nenhum parâmetro.
 
-4. Caso queira executar o método "POST", selecione o mesmo no menu ao lado do campo de URL. após isso, vá ao body e selecione "raw". uma vez selecionado, você pode inserir os dados que desejar (título, descrição e marcar como feito ou não), mas tome cuidado com as condições. O resultado deve ser o seguinte:
-
 ![Imagem Postman 7](images/postman7.png)
 
-5. Para executar os métodos "PUT" e "DELETE", é preciso adicionar "/" e o ID da tarefa à URL. EX.:
+4. Caso queira executar o método "POST", selecione o mesmo no menu ao lado do campo de URL. após isso, vá ao body e selecione "raw". uma vez selecionado, você pode inserir os dados que desejar (título, descrição e marcar como feito ou não) em formato JSON, mas tome cuidado com as condições. O resultado deve ser o seguinte:
 
 ![Imagem Postman 8](images/postman8.png)
 
-O método "DELETE" não necessita nenhum parâmetro a mais, diferente do método "PUT".
-
-6. Para executar o método "PUT", o processo é semelhante ao processo do método "POST": selecione o mesmo no menu ao lado do campo de URL. após isso, vá ao body e selecione "raw". uma vez selecionado, você pode alterar os dados que desejar (título, descrição e marcar como feito ou não), mas tome cuidado com as condições. O resultado deve ser o seguinte:
+5. Para executar os métodos "PUT" e "DELETE", é preciso adicionar "/" e o ID da tarefa à URL. EX.:
 
 ![Imagem Postman 9](images/postman9.png)
 
-Pronto! Agora você já sabe como fazer as requisições através do Postman.
+O método "DELETE" não necessita nenhum parâmetro a mais, diferente do método "PUT".
+
+6. Para executar o método "PUT", o processo é semelhante ao processo do método "POST": selecione o mesmo no menu ao lado do campo de URL. após isso, vá ao body e selecione "raw". uma vez selecionado, você pode alterar os dados que desejar (título, descrição e marcar como feito ou não) em formato JSON, mas tome cuidado com as condições. O resultado deve ser o seguinte:
 
 ![Imagem Postman 10](images/postman10.png)
 
@@ -192,7 +191,8 @@ Pronto! Agora você já sabe como fazer as requisições através do Postman.
 ### Usando requests
 Você já deve possuir a biblioteca requests instalada no ambiente virtual. Portanto, você já pode testar a API.
 
-1. crie uma variável "auth". Essa variável será uma tupla, com o nome do usuário e a senha, respectivamente.
+1. importe a biblioteca requests e crie variáveis "url" e "json". Essas variáveis serão o endpoint de login da API (http://127.0.0.1:8080/login) e um dicionário com o usuário "admin" e a senha "admin123".<br>
+Em seguida, execute o método "POST" e guarde a resposta numa variável "headers" em formato JSON.
 
 ![Imagem Requests 1](images/requests1.png)
 
@@ -208,7 +208,7 @@ Você já deve possuir a biblioteca requests instalada no ambiente virtual. Port
 
 ![Imagem Requests 4](images/requests4.png)
 
-Eu optei por criar novas variáveis, mas você também pode alterar a variável antiga.
+Eu optei por alterar a variável antiga, mas você também pode criar novas variáveis.
 
 5. com a URL nova, é possível realizar os métodos "PUT", para atualizar a tarefa que você enviou anteriormente pro banco de dados, e "DELETE", para deletar essa mesma tarefa.
 
@@ -217,9 +217,8 @@ Eu optei por criar novas variáveis, mas você também pode alterar a variável 
 6. no terminal para rodar os códigos que você criou, digite:<br>
 python nome-do-arquivo.py (EX.: python test_request.py)
 
-Pronto! Você agora sabe fazer as requisições usando a biblioteca requests.
-
 ![Imagem Requests 6](images/requests6.png)
+![Imagem Requests 7](images/requests7.png)
 
 ### Usando Pytest
 Você já deve possuir a biblioteca Pytest instalada no ambiente virtual. Portanto, você já pode testar a API.
@@ -228,9 +227,10 @@ Você já deve possuir a biblioteca Pytest instalada no ambiente virtual. Portan
 
 ![Imagem Pytest 1](images/pytest1.png)
 
-A função "b64encode" é o que vai gerar o token de acesso do usuário.<br>
+Os imports "sys" e "os" servem para que o terminal reconheça a pasta "scripts" no PATH. Importante destacar que outras máquinas podem não precisar que seja feito isso.<br>
 A decorator "fixture" é o que vai garantir que os testes sejam feitos.<br>
-As variáveis "app" e "db" representam a API REST, que é o app Flask que criei, e o banco de dados SQLite ao qual a API está integrada.
+As variáveis "app" e "db" representam a API REST, que é o app Flask em si, e o banco de dados PostgreSQL ao qual a API está integrada, respectivamente.<br>
+A função "environ" define o endpoint do PostgreSQL, assim como no arquivo da API.
 
 2. antes de rodar cada teste, crie as funções de autenticação:
 
@@ -242,20 +242,28 @@ Essas funções garantirão que a autenticação será feita e bem-sucedida em c
 
 ![Imagem Pytest 3](images/pytest3.png)
 
-4. você irá definir uma função pra cada requisição, e o Pytest vai executá-las individualmente. As funções devem ter o seguinte modelo:
+4. A partir daqui, o ideal é definir funções para todos os retornos possíveis, incluindo erros específicos que forem relacionados a checagens específicas da API.
 
 ![Imagem Pytest 4](images/pytest4.png)
+![Imagem Pytest 5](images/pytest5.png)
 
-Você pode alterar título, descrição e marcar como feita à vontade em cada uma delas.
+As funções acima testam se os métodos CRUD estão sendo bem-sucedidos.
+
+![Imagem Pytest 6](images/pytest6.png)
+![Imagem Pytest 7](images/pytest7.png)
+
+As funções acima checam se há tratamento de erros específicos, como falta de título da tarefa, quebra de limite de caracteres, tentativa de edição de tarefa inexistente, entre outros.
+
+O parâmetro "json" de qualquer uma das funções pode ser alterado, desde que respeite o intuito de cada função. EX.: uma função cujo retorno esperado é um erro específico não pode receber parâmetros que não causem o erro esperado.
 
 5. no terminal para rodar os códigos que você criou, digite:<br>
 pytest nome-do-arquivo.py (EX.: pytest test_auto.py)
 
-
+![Imagem Pytest 8](images/pytest8.png)
 
 Todos os testes devem ser bem-sucedidos. Ignore warnings, caso haja.
 
-Pronto! Você aprendeu a fazer os testes de requisição usando Pytest.
+![Imagem Pytest 9](images/pytest9.png)
 
 ## Observações importantes:
 1. A API usa SQLite para armazenar os dados, mas pretendo evoluir esse serviço de banco de dados futuramente

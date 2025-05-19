@@ -5,15 +5,6 @@ from pytest import fixture
 from scripts.app import app, db
 os.environ['DATABASE_URL'] = 'postgresql://admin:admin123@localhost:5432/to_do_list_test'
 
-@fixture
-def client():
-    app.config['TESTING'] = True
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-    with app.test_client() as client:
-        yield client
-
 def get_token(client):
     response = client.post('/login', json={
         'username': 'admin',
@@ -25,6 +16,15 @@ def get_token(client):
 
 def auth_header(token):
     return {'Authorization': token}
+
+@fixture
+def client():
+    app.config['TESTING'] = True
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+    with app.test_client() as client:
+        yield client
 
 def test_create_task_success(client):
     token = get_token(client)
