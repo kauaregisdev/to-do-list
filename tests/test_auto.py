@@ -38,14 +38,21 @@ def test_create_task_success(client):
     assert data['title'] == 'Study Flask'
     assert 'created_at' in data
 
-def test_read_tasks_success(client):
+def test_tasks_pagination(client):
     token = get_token(client)
-    client.post('/tasks', json={'title': 'Study Django'}, headers=auth_header(token))
-    response = client.get('/tasks', headers=auth_header(token))
+    for i in range(12):
+        client.post('/tasks', json={
+            'title': f'Task {i}',
+            'description': f'Description {i}'
+        }, headers=auth_header(token))
+    response = client.get('/tasks?page=1', headers=auth_header(token))
     assert response.status_code == 200
     data = response.get_json()
-    assert isinstance(data, list)
-    assert len(data) >= 1
+    assert data['page'] == 1
+    assert data['per_page'] == 5
+    assert data['total'] == 12
+    assert data['pages'] == 3
+    assert len(data['tasks']) == 5
 
 def test_update_task_success(client):
     token = get_token(client)

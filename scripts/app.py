@@ -67,6 +67,16 @@ class Task(db.Model): # cria um modelo de tarefa
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(UTC))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
+def task_to_dict(task):
+    return{
+        'id': task.id,
+        'title': task.title,
+        'description': task.description,
+        'done': task.done,
+        'created_at': task.created_at,
+        'updated_at': task.updated_at
+    }
+
 with app.app_context():
     db.drop_all()
     db.create_all()
@@ -109,14 +119,17 @@ def create_task(): # cria tarefa com nome, descrição e ID
 @app.route('/tasks', methods=['GET']) # método que busca dados da API
 @requires_jwt
 def read_tasks(): # retorna uma lista com as tarefas cadastrados
-    tasks = Task.query.all()
-    return jsonify([{
-            'id': task.id,
-            'title': task.title,
-            'description': task.description,
-            'done': task.done,
-            'created_at': task.created_at
-        } for task in tasks]), 200
+    page = request.args.get('page', 1, type=int)
+    per_page = 5
+    pagination = Task.query.paginate(page=page, per_page=per_page, error_out=False)
+    tasks = [task_to_dict(task) for task in pagination.items]
+    return jsonify({
+        'tasks': tasks,
+        'total': pagination.total,
+        'page': pagination.page,
+        'pages': pagination.pages,
+        'per_page': pagination.per_page
+    }), 200
 
 @app.route('/tasks/<int:task_id>', methods=['PUT']) # método que atualiza dados já existentes na API
 @requires_jwt

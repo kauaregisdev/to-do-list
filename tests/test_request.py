@@ -9,7 +9,7 @@ json = {
 
 response = requests.post(url, json=json)
 headers = response.json()
-print('POST /tasks', headers)
+print('POST /login', headers)
 
 url = 'http://127.0.0.1:8080/tasks'
 json = {
