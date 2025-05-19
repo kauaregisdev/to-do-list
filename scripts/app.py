@@ -166,7 +166,7 @@ def delete_task(task_id): # deleta uma tarefa específica
         abort(404)
     db.session.delete(task)
     db.session.commit()
-    return jsonify({'message': 'Task deleted'}), 204
+    return ('', 204)
 
 if __name__ == '__main__':
     app.run(debug=True) # roda o servidor (usando waitress para rodar sem exceções)
