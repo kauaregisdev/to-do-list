@@ -1,5 +1,6 @@
 from os import environ
 import jwt # importando a biblioteca do JSON Web Token
+from flask_restx import Api, Resource, fields
 from flask_sqlalchemy import SQLAlchemy # importando a função para usar banco de dados na API
 from flask import Flask, abort, request, jsonify # importando as funções necessárias do Flask para a API
 from functools import wraps # importando função para criar uma decorator
@@ -42,6 +43,98 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
     'postgresql://admin:admin123@localhost:5000/to_do_list'
 )
 db = SQLAlchemy(app)
+api = Api(app, title='To-do List API', description='Task management API')
+
+task_model = api.model('Task', {
+    'id': fields.Integer(readOnly=True),
+    'title': fields.String(required=True, max_length=60),
+    'description': fields.String(max_length=250),
+    'done': fields.Boolean,
+    'created_at': fields.String,
+    'updated_at': fields.String
+})
+
+@api.route('/tasks')
+class TaskListResource(Resource):
+    @api.doc('list_tasks')
+    @api.marshal_list_with(task_model)
+    def get(self):
+        page = request.args.get('page', 1, type=int)
+        per_page = 5
+        pagination = Task.query.paginate(page=page, per_page=per_page, error_out=False)
+        tasks = [task_to_dict(task) for task in pagination.items]
+        return jsonify({
+        'tasks': tasks,
+        'total': pagination.total,
+        'page': pagination.page,
+        'pages': pagination.pages,
+        'per_page': pagination.per_page
+        }), 200
+    
+    @api.doc('create_task')
+    @api.expect(task_model)
+    @api.marshal_with(task_model, code=201)
+    def post(self):
+        data = request.get_json()
+        if not data or 'title' not in data or not data['title'].strip():
+            return jsonify({'error': '"Title" field is required'}), 400
+        if len(data.get('title')) > 60:
+            return jsonify({'error': 'Title must not surpass 60 characters'}), 400
+        if len(data.get('description', '')) > 250:
+            return jsonify({'error': 'Description must not surpass 250 characters'}), 400
+        new_task = Task(
+            title=data['title'],
+            description=data.get('description', ''),
+            done=data.get('done', False)
+        )
+        db.session.add(new_task)
+        db.session.commit()
+        return jsonify({
+            'id': new_task.id,
+            'title': new_task.title,
+            'description': new_task.description,
+            'done': new_task.done,
+            'created_at': new_task.created_at
+        }), 201
+    
+@api.route('/tasks/<int:task_id>')
+class TaskResource(Resource):
+    @api.doc('update_task')
+    @api.expect(task_model)
+    @api.marshal_with(task_model)
+    def put(self, task_id):
+        task = db.session.get(Task, task_id)
+        if not task:
+            abort(404)
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Data was not provided'}), 400
+        if 'title' in data and not data['title'].strip():
+            return jsonify({'error': '"Title" field cannot be void'}), 400
+        if 'title' in data and len(data['title']) > 60:
+            return jsonify({'error': 'Title must not surpass 60 characters'}), 400
+        if 'description' in data and len(data['description']) > 250:
+            return jsonify({'error': 'Description must not surpass 250 characters'}), 400
+        task.title = data.get('title', task.title)
+        task.description = data.get('description', task.description)
+        task.done = data.get('done', task.done)
+        db.session.commit()
+        return jsonify({
+            'id': task.id,
+            'title': task.title,
+            'description': task.description,
+            'done': task.done,
+            'updated_at': task.updated_at
+        }), 200
+    
+    @api.doc('delete_task')
+    def delete(self, task_id):
+        task = db.session.get(Task, task_id)
+        if not task:
+            abort(404)
+        db.session.delete(task)
+        db.session.commit()
+        return ('', 204)
 
 @app.errorhandler(400)
 def bad_request(error):
@@ -73,8 +166,8 @@ def task_to_dict(task):
         'title': task.title,
         'description': task.description,
         'done': task.done,
-        'created_at': task.created_at,
-        'updated_at': task.updated_at
+        'created_at': task.created_at.isoformat() if task.created_at else None,
+        'updated_at': task.updated_at.isoformat() if task.updated_at else None
     }
 
 with app.app_context():
