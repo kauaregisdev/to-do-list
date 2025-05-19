@@ -26,7 +26,8 @@ Após isso, o app é configurado:
 
 ![Imagem appconfig 3](images/appconfig3.png)
 
-A variável "app" é o que define a existência do app Flask, e a variável "db" define o banco de dados.
+A variável "app" é o que define a existência do app Flask, e a variável "db" define o banco de dados.<br>
+No cabeçalho, é definido também o endpoint do PostgreSQL, com o usuário, a senha e o nome do banco de dados.
 
 A decorator "@app.errorhandler" faz tratamento de erro, dependendo do erro que deve se achar. Nesse caso, ocorre tratamento de erro para bad request, não autorizado, não encontrado ou erro de servidor.
 
@@ -37,17 +38,21 @@ A descrição pode ter até 250 caracteres, mas não é obrigatória.<br>
 A variável "done" define se a tarefa foi concluída ou não, e é False por definição.<br>
 As variáveis "created_at" e "updated_at" se atualizam conforme a data em que uma criação ou atualização é feita no banco de dados.<br>
 
+Após isso, é definida uma função para agrupar as tarefas existentes:
+
+![Imagem appconfig 4](images/appconfig4.png)
+
 A função "task_to_dict" recebe um parâmetro task, que representa a tarefa em si, e retorna em forma de dicionário os dados dessa tarefa: ID, título, descrição, marcador de feita e data de criação/atualização.<br>
 Essa função será útil para o método "GET", que irá retornar todas as tarefas existentes.
 
-Após isso, temos um bloco específico que reinicia o banco de dados a cada vez que a API sofre deploy:
+Após isso, temos um bloco específico da fase de desenvolvimento da API que reinicia o banco de dados a cada vez que a API sofre deploy:
 
-![Imagem appconfig 4](images/appconfig4.png)
+![Imagem appconfig 5](images/appconfig5.png)
 
 As funções "drop_all" e "create_all" irão deletar o banco existente e criar um novo, respectivamente.
 
 Após isso, temos cada função básica de consulta, que são criar, acessar, atualizar e deletar dados do banco de dados da API. Importante ressaltar que todas as funções de consulta serão acompanhadas de duas decorators: @app.route e @requires_auth.<br>
-A decorator @app.route define a URL em que cada função poderá ser chamada. EX.: http://127.0.0.1:5000/tasks, para "POST" e "GET". Para "PUT" e "DELETE", a mesma URL, só que adicionando "/" e o ID da tarefa.<br>
+A decorator @app.route define a URL em que cada função poderá ser chamada. EX.: http://127.0.0.1:8080/tasks, para "POST" e "GET". Para "PUT" e "DELETE", a mesma URL, só que adicionando "/" e o ID da tarefa.<br>
 A decorator @requires_auth protege as rotas de cada função, obrigando o usuário a inserir um usuário e uma senha pré-cadastrados.
 
 
@@ -128,7 +133,7 @@ Caso deseje encerrar o servidor, digite CTRL+C no terminal.
 
 5. para rodar os testes com código, crie outro terminal e digite:<br>
 activate (ou venv\Scripts\Activate)<br>
-cd scripts
+cd tests
 
 ![Imagem Terminal 7](images/terminal7.png)
 
@@ -150,7 +155,7 @@ Primeiro, certifique-se de que você possui a extensão baixada. Caso não possu
 
 Com a extensão instalada, você já pode testar a API.
 
-1. com a API funcionando, insira no campo de URL a seguinte URL: http://127.0.0.1:5000/tasks
+1. com a API funcionando, insira no campo de URL a seguinte URL: http://127.0.0.1:8080/tasks
 
 ![Imagem Postman 4](images/postman4.png)
 
@@ -191,7 +196,7 @@ Você já deve possuir a biblioteca requests instalada no ambiente virtual. Port
 
 ![Imagem Requests 1](images/requests1.png)
 
-2. crie uma variável "url" que vai armazenar a URL principal da API: http://127.0.0.1:5000/tasks. Em seguida, crie um dicionário "json" contendo pelo menos o título da tarefa. Esse dicionário é a sua tarefa, que será enviada para o banco de dados.
+2. crie uma variável "url" que vai armazenar a URL principal da API: http://127.0.0.1:8080/tasks. Em seguida, crie um dicionário "json" contendo pelo menos o título da tarefa. Esse dicionário é a sua tarefa, que será enviada para o banco de dados.
 
 ![Imagem Requests 2](images/requests2.png)
 
@@ -199,7 +204,7 @@ Você já deve possuir a biblioteca requests instalada no ambiente virtual. Port
 
 ![Imagem Requests 3](images/requests3.png)
 
-4. para utilizar os métodos "PUT" e "DELETE", você precisará adicionar "/" e o ID da tarefa à URL. EX.: http://127.0.0.1:5000/tasks/1. Caso deseje, você pode alterar a tarefa que você criou ao alterar o dicionário que você criou no cabeçalho do código.
+4. para utilizar os métodos "PUT" e "DELETE", você precisará adicionar "/" e o ID da tarefa à URL. EX.: http://127.0.0.1:8080/tasks/1. Caso deseje, você pode alterar a tarefa que você criou ao alterar o dicionário que você criou no cabeçalho do código.
 
 ![Imagem Requests 4](images/requests4.png)
 
