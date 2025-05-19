@@ -64,10 +64,9 @@ A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicion
 
 ![Função ver tarefas](images/read.png)
 
-A função define uma variável tasks que faz uma consulta no banco de dados para buscar objetos Task existentes.<br>
-A função retorna ao usuário um jsonify que mostra a tarefa em forma de dicionário, com ID, título, descrição (se houver), status (feito ou não) e data de criação de cada tarefa, dentro de uma lista, e um código 200, que indica que a requisição foi bem-sucedida.
-
-
+A função define, num primeiro momento, uma variável "page" e uma variável "per_page", que irão como parâmetros numa variável "pagination", que nesse caso vai mostrar as tarefas por páginas, sendo que cada página possui até 5 tarefas.<br>
+Após isso, é criada uma variável "tasks", que vai armazenar as tarefas existentes. A função "task_to_dict" é chamada para receber as tarefas cadastradas e retorná-las em forma de dicionário.<br>
+A função retorna ao usuário um jsonify que mostra as tarefas na página, quantidade total de tarefas, a numeração da página específica, quantas páginas ao todo e quantas tarefas existem na página específica.
 
 ### Atualizar uma tarefa já existente
 
@@ -107,7 +106,7 @@ cd to-do-list<br>
 2. crie e ative o ambiente virtual, com os comandos:<br>
 python -m venv venv<br>
 venv\Scripts\Activate<br>
-OBSERVAÇÃO: caso haja uma pasta venv/ nos arquivos do projeto, delete-a antes de criar um novo ambiente virtual!
+Caso haja uma pasta venv/ nos arquivos do projeto, esta deve ser deletada antes de criar um novo ambiente virtual.
 
 ![Imagem Terminal 3](images/terminal3.png)
 ![Imagem Terminal 4](images/terminal4.png)
@@ -119,7 +118,7 @@ pip install -r requirements.txt
 
 4. faça o deploy local do app Flask, com o comando:<br>
 cd scripts<br>
-waitress-serve --port=5000 app:app
+waitress-serve --port=8080 app:app
 
 Se você fez tudo certo, a API já está funcionando a partir daqui! A resposta do terminal deve ser a seguinte:
 
@@ -137,7 +136,7 @@ Agora seu terminal para rodar os testes com código está criado.
 
 ## Como testar a API:
 Você pode consumir a API pelo Postman ou pelos arquivos de teste que criei, sendo que um deles utiliza a biblioteca requests e o outro usa pytest pra rodar os testes.<br>
-OBSERVAÇÃO: O ambiente virtual deve estar ativo e com as dependências instaladas para rodar os testes!
+Importante ressaltar que o ambiente virtual deve estar ativo e com as dependências instaladas para rodar os testes.
 
 
 ### Usando Postman
