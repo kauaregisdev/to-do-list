@@ -145,7 +145,6 @@ Importante ressaltar que o ambiente virtual deve estar ativo e com as dependênc
 
 
 ### Usando Postman
-<!-- editar imagens e informações -->
 
 ![Imagem Postman 1](images/postman1.png)
 
@@ -156,37 +155,55 @@ Primeiro, certifique-se de que você possui a extensão baixada. Caso não possu
 
 Com a extensão instalada, você já pode testar a API.
 
-1. com a API funcionando, insira no campo de URL a seguinte URL: http://127.0.0.1:8080/tasks
+1. com a API funcionando, insira no campo de URL a seguinte URL: http://127.0.0.1:8080/login
 
 ![Imagem Postman 4](images/postman4.png)
 
-2. vá na aba "Authorization" e selecione "Basic Auth". após isso, insira "admin" como usuário e "admin123" como senha.
+2. selecione o método "POST". Em seguida, vá até o headers, defina key como "content-type" e value como "application/json". 
 
 ![Imagem Postman 5](images/postman5.png)
 
-3. vá na aba "Headers" e digite: "content-type" como key, "application/json" como value.
+3. Em seguida, vá até a aba body e selecione "raw". Após isso, envie em formato JSON o usuário ("admin") e a senha ("admin123"). O retorno esperado é um JSON com o token, num formato semelhante ao que segue:
 
 ![Imagem Postman 6](images/postman6.png)
 
-A partir daqui, já é possível executar o método "GET", pois ele não recebe nenhum parâmetro.
+Esse token será necessário para fazer as requisições.
+
+3. altere a URL para http://127.0.0.1:8080/tasks e insira no headers:
+
+content-type: application/json (caso não esteja)
+authorization: Bearer + token
 
 ![Imagem Postman 7](images/postman7.png)
 
-4. Caso queira executar o método "POST", selecione o mesmo no menu ao lado do campo de URL. após isso, vá ao body e selecione "raw". uma vez selecionado, você pode inserir os dados que desejar (título, descrição e marcar como feito ou não) em formato JSON, mas tome cuidado com as condições. O resultado deve ser o seguinte:
+Com esses passos feitos, é possível obter o método "GET", mas ele estará vazio.
+
+4. para obter o método "POST", vá até a aba body e selecione "raw". Em seguida, envie em formato JSON a tarefa com seus respectivos atributos (título é obrigatório). A entrada e a saída esperadas devem ser as seguintes:
 
 ![Imagem Postman 8](images/postman8.png)
 
-5. Para executar os métodos "PUT" e "DELETE", é preciso adicionar "/" e o ID da tarefa à URL. EX.:
+Executando o método "GET" após a criação da tarefa, a saÍda esperada deve ser a seguinte:
 
 ![Imagem Postman 9](images/postman9.png)
 
-O método "DELETE" não necessita nenhum parâmetro a mais, diferente do método "PUT".
-
-6. Para executar o método "PUT", o processo é semelhante ao processo do método "POST": selecione o mesmo no menu ao lado do campo de URL. após isso, vá ao body e selecione "raw". uma vez selecionado, você pode alterar os dados que desejar (título, descrição e marcar como feito ou não) em formato JSON, mas tome cuidado com as condições. O resultado deve ser o seguinte:
+Para trocar a página, basta adicionar "?page=" e a página desejada. EX.: http://127.0.0.1:8080/tasks?page=2
 
 ![Imagem Postman 10](images/postman10.png)
 
+5. para obter os métodos "PUT" e "DELETE", adicione à URL "/" e o ID da tarefa a ser alterada. EX.: http://127.0.0.1:8080/tasks/1
 
+![Imagem Postman 11](images/postman11.png)
+
+Com essa alteração, é possível obter o método "DELETE".
+
+6. Para o método "PUT", vá até a aba body e selecione "raw". Em seguida, envie em formato JSON as alterações que desejar fazer (obedecendo às regras estabelecidas pra cada atributo).<br>
+Importante ressaltar que é possível alterar qualquer atributo (título, descrição e marcador de feito), desde que obedeça as regras de cada atributo. A entrada e a saída esperadas devem ser as seguintes:
+
+![Imagem Postman 12](images/postman12.png)
+
+Ao executar o método "DELETE", nenhuma saída é esperada, como no exemplo que segue:
+
+![Imagem Postman 13](images/postman13.png)
 
 ### Usando requests
 Você já deve possuir a biblioteca requests instalada no ambiente virtual. Portanto, você já pode testar a API.
@@ -266,4 +283,4 @@ Todos os testes devem ser bem-sucedidos. Ignore warnings, caso haja.
 ![Imagem Pytest 9](images/pytest9.png)
 
 ## Observações importantes:
-1. O projeto, apesar de estar funcionando, está sujeito a sofrer alterações e implementações de novas funções no futuro
+1. O projeto, apesar de estar funcionando, está sujeito a sofrer alterações e implementações de novas funções no futuro.
