@@ -1,14 +1,12 @@
 # ignora a pasta de ambiente virtual
 /venv
 
-# ignora o pycache
-/scripts/__pycache__
-
 # ignora o banco de dados da API
 /scripts/instance
 
 # ignora o pytest_cache
 /.pytest_cache
+/scripts/__pycache__
 /scripts/.pytest_cache
 /tests/__pycache__
 /tests/.pytest_cache
