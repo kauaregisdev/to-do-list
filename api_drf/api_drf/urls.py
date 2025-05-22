@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls import handler400, handler401, handler404, handler500
+from django.conf.urls import handler400, handler403, handler404, handler500
 from api import views
 
 handler400 = 'api.views.bad_request'
-handler401 = 'api.views.unauthorized'
+handler403 = 'api.views.forbidden'
 handler404 = 'api.views.not_found'
 handler500 = 'api.views.internal_error'
 

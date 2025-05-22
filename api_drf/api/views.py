@@ -7,8 +7,8 @@ from .models import Task
 def bad_request(request, exception):
     return JsonResponse({'error': 'Bad Request', 'message': str(exception)}, status=400)
 
-def unauthorized(request, exception):
-    return JsonResponse({'error': 'Unauthorized', 'message': str(exception)}, status=401)
+def forbidden(request, exception):
+    return JsonResponse({'error': 'Forbidden', 'message': str(exception)}, status=403)
 
 def not_found(request, exception):
     return JsonResponse({'error': 'Not Found', 'message': str(exception)}, status=404)
