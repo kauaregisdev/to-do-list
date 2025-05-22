@@ -2,16 +2,6 @@ from scripts.main import app, db, generate_token, requires_jwt, USERNAME, PASSWO
 from scripts.models import Task
 from flask import abort, request, jsonify
 
-def task_to_dict(task):
-    return{
-        'id': task.id,
-        'title': task.title,
-        'description': task.description,
-        'done': task.done,
-        'created_at': task.created_at.isoformat() if task.created_at else None,
-        'updated_at': task.updated_at.isoformat() if task.updated_at else None
-    }
-
 @app.errorhandler(400)
 def bad_request(error):
     return jsonify({'error': 'Bad Request', 'message': str(error)}), 400
@@ -69,7 +59,14 @@ def read_tasks(): # retorna uma lista com as tarefas cadastrados
     page = request.args.get('page', 1, type=int)
     per_page = 5
     pagination = Task.query.paginate(page=page, per_page=per_page, error_out=False)
-    tasks = [task_to_dict(task) for task in pagination.items]
+    tasks = [{
+        'id': task.id,
+        'title': task.title,
+        'description': task.description,
+        'done': task.done,
+        'created_at': task.created_at.isoformat() if task.created_at else None,
+        'updated_at': task.updated_at.isoformat() if task.updated_at else None
+    } for task in pagination.items]
     return jsonify({
         'tasks': tasks,
         'total': pagination.total,
