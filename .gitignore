@@ -2,15 +2,17 @@
 /venv
 
 # ignora o banco de dados da API
-/scripts/instance
+/api_flask/scripts/instance
 
 # ignora o pytest_cache
 /.pytest_cache
-/scripts/__pycache__
-/scripts/.pytest_cache
-/tests/__pycache__
-/tests/.pytest_cache
+/api_drf/api_drf/__pycache__
+api_flask/.pytest_cache
+/api_flask/scripts/__pycache__
+/api_flask/scripts/.pytest_cache
+/api_flask/tests/__pycache__
+/api_flask/tests/.pytest_cache
 
 # ignora relatórios de teste
-/tests/.coverage
-/tests/htmlcov
+/api_flask/tests/.coverage
+/api_flask/tests/htmlcov
