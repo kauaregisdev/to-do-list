@@ -1,10 +1,20 @@
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from .models import Task
 
-class LoginView(APIView):
-    def post(self, request):
-        ...
+def bad_request(request, exception):
+    return JsonResponse({'error': 'Bad Request', 'message': str(exception)}, status=400)
+
+def unauthorized(request, exception):
+    return JsonResponse({'error': 'Unauthorized', 'message': str(exception)}, status=401)
+
+def not_found(request, exception):
+    return JsonResponse({'error': 'Not Found', 'message': str(exception)}, status=404)
+
+def internal_error(request):
+    return JsonResponse({'error': 'Internal Server Error', 'message': 'An unexpected error occurred.'}, status=500)
 
 class TasksView(APIView):
     def post(self, request):
