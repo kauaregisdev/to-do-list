@@ -6,6 +6,8 @@
 
 # ignora o pytest_cache
 /.pytest_cache
+/api_drf/api/__pycache__
+/api_drf/api/migrations/__pycache__
 /api_drf/api_drf/__pycache__
 api_flask/.pytest_cache
 /api_flask/scripts/__pycache__
