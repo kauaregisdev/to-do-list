@@ -16,15 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls import handler400, handler403, handler404, handler500
-from api import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from api import handlers
 
-handler400 = 'api.views.bad_request'
-handler403 = 'api.views.forbidden'
-handler404 = 'api.views.not_found'
-handler500 = 'api.views.internal_error'
+handler400 = handlers.bad_request
+handler403 = handlers.forbidden
+handler404 = handlers.not_found
+handler500 = handlers.internal_error
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
 ]
