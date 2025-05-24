@@ -1,7 +1,7 @@
 from django.db import models
 
-class Task(models.Model): # cria um modelo de tarefa
-    id = models.IntegerField(primary_key=True)
+class TaskDRF(models.Model): # cria um modelo de tarefa
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=60)
     description = models.TextField(max_length=250, blank=True)
     done = models.BooleanField(default=False)
